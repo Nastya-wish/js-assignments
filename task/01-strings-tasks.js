@@ -22,7 +22,7 @@
  *   '',  'bb'  => 'bb'
  */
 function concatenateStrings(value1, value2) {
-    return value1.concat(value2)
+    return value1.concat(value2);
 }
 
 
@@ -38,7 +38,7 @@ function concatenateStrings(value1, value2) {
  *   ''      => 0
  */
 function getStringLength(value) {
-    return value.length
+    return value.length;
 }
 
 /**
@@ -55,7 +55,7 @@ function getStringLength(value) {
  *   'Chuck','Norris'  => 'Hello, Chuck Norris!'
  */
 function getStringFromTemplate(firstName, lastName) {
-    return `Hello, ${firstName} ${lastName}!`
+    return `Hello, ${firstName} ${lastName}!`;
 }
 
 /**
@@ -69,7 +69,7 @@ function getStringFromTemplate(firstName, lastName) {
  *   'Hello, Chuck Norris!' => 'Chuck Norris'
  */
 function extractNameFromTemplate(value) {
-    return new RegExp("Hello, (.+)!").exec(value)[1]
+    return value.substring(7, value.length -1);
 }
 
 
@@ -84,7 +84,7 @@ function extractNameFromTemplate(value) {
  *   'cat'       => 'c'
  */
 function getFirstChar(value) {
-    return value.substring(0,1)
+    return value[0];
 }
 
 /**
@@ -99,7 +99,7 @@ function getFirstChar(value) {
  *   '\tHello, World! ' => 'Hello, World!'
  */
 function removeLeadingAndTrailingWhitespaces(value) {
-    return value.trim()
+    return value.trim();
 }
 
 /**
@@ -114,12 +114,12 @@ function removeLeadingAndTrailingWhitespaces(value) {
  *   'cat', 3 => 'catcatcat'
  */
 function repeatString(value, count) {
-    return value.repeat(count)
+    return value.repeat(count);
 }
 
 /**
  * Remove the first occurrence of string inside another string
- *
+ * 
  * @param {string} str
  * @param {string} value
  * @return {string}
@@ -130,7 +130,7 @@ function repeatString(value, count) {
  *   'ABABAB','BA' => 'ABAB'
  */
 function removeFirstOccurrences(str, value) {
-    return str.replace(value, '')
+    return str.replace(value, "");
 }
 
 /**
@@ -145,7 +145,7 @@ function removeFirstOccurrences(str, value) {
  *   '<a>' => 'a'
  */
 function unbracketTag(str) {
-    return str.replace('<', '').replace('>', '')
+    return str.substring(1, str.length - 1);
 }
 
 
@@ -160,7 +160,7 @@ function unbracketTag(str) {
  *  'abcdefghijklmnopqrstuvwxyz' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
  */
 function convertToUpperCase(str) {
-    return str.toUpperCase()
+    return str.toUpperCase();
 }
 
 /**
@@ -174,7 +174,7 @@ function convertToUpperCase(str) {
  *   'info@gmail.com' => ['info@gmail.com']
  */
 function extractEmails(str) {
-    return str.split(';')
+    return str.replace(";", ", ");
 }
 
 /**
@@ -201,25 +201,11 @@ function extractEmails(str) {
  *
  */
 function getRectangleString(width, height) {
-    var horizontalChar = '─';
-    var verticalChar = '│';
-    var innerChar = ' ';
-    var breakChar = '\n';
-    var str = '';
+    let topLine = '┌' + '─'.repeat(width -2) + '┐' + '\n';
+    let centrLine = '└' + '─'.repeat(width -2) + '┘' + '\n';
+    let bottomLine = `│${' '.repeat(width -2)}│\n`;
 
-    for(var h = 1; h <= height; h++) {
-        switch (h) {
-            case 1:
-                str += '┌' + horizontalChar.repeat(width-2) + '┐' + breakChar
-                break
-            case height:
-                str += '└' + horizontalChar.repeat(width-2) + '┘' + breakChar
-                break
-            default:
-                str += verticalChar + innerChar.repeat(width-2) + verticalChar + breakChar
-        }
-    }
-    return str
+    return topLine + bottomLine.repeat(height - 2) + centrLine;
 }
 
 
@@ -239,25 +225,17 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    var amount = 13
-    var output = ""
-
+    var encoded = '';
     for (var i = 0; i < str.length; i++) {
-        var c = str[i]
-        if (c.match(/[a-z]/i)) {
-            var code = str.charCodeAt(i)
-
-            if (code >= 65 && code <= 90) {
-                c = String.fromCharCode(((code - 65 + amount) % 26) + 65)
-            }
-            else if (code >= 97 && code <= 122) {
-                c = String.fromCharCode(((code - 97 + amount) % 26) + 97)
-            }
-        }
-        output += c
+       encoded += encode(str[i]);
     }
+    return encoded;
 
-    return output
+    function encode(c) {
+        var input = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        var output = 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm';
+        return input.indexOf(c) === -1 ? c : output[input.indexOf(c)];
+    }
 }
 
 /**
@@ -274,42 +252,52 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-    return Object.prototype.toString.call(value) === "[object String]"
+    if(typeof value === 'string')
+    {
+        return true;
+	}
+	else if(value instanceof String)
+	{
+		return true;
+	}
+    else
+    {
+        return false;
+    }
 }
 
 
 /**
  * Returns playid card id.
- *
+ * 
  * Playing cards inittial deck inclides the cards in the following order:
- *
+ * 
  *  'A♣','2♣','3♣','4♣','5♣','6♣','7♣','8♣','9♣','10♣','J♣','Q♣','K♣',
  *  'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦',
  *  'A♥','2♥','3♥','4♥','5♥','6♥','7♥','8♥','9♥','10♥','J♥','Q♥','K♥',
  *  'A♠','2♠','3♠','4♠','5♠','6♠','7♠','8♠','9♠','10♠','J♠','Q♠','K♠'
- *
+ * 
  * (see https://en.wikipedia.org/wiki/Standard_52-card_deck)
  * Function returns the zero-based index of specified card in the initial deck above.
- *
+ * 
  * @param {string} value
  * @return {number}
  *
  * @example
  *   'A♣' => 0
- *   '2♣' => 1
+ *   '2♣' => 1 
  *   '3♣' => 2
  *     ...
  *   'Q♠' => 50
  *   'K♠' => 51
  */
 function getCardId(value) {
-    const colors = '♣♦♥♠',
-        nums = 'A234567891JQK';
+    let card = ['A♣', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣', 'J♣', 'Q♣', 'K♣',
+    'A♦', '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', '10♦', 'J♦', 'Q♦', 'K♦',
+    'A♥', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'J♥', 'Q♥', 'K♥',
+    'A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠'];
 
-    let color = value[value.length - 1],
-        num = value[0];
-
-    return colors.indexOf(color) * 13 + nums.indexOf(num);
+    return card.indexOf(value);
 }
 
 
